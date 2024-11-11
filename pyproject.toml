@@ -1,0 +1,77 @@
+# ###########################################
+#
+# Project
+#
+[project]
+name = "lst-utils"
+
+authors = [
+  { name="Pierre M.", email="pierre@devleaks.be" },
+]
+
+description = "Living Scenery Tecnology Utilities"
+
+readme = "README.md"
+
+license = {file = "LICENCE"}
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment :: Simulation",
+]
+
+requires-python = ">=3.10"
+
+dynamic = [
+    "version"
+]
+
+
+[project.urls]
+Homepage = "https://devleaks.github.io/lst-utils/"
+Issues = "https://github.com/devleaks/lst-utils/issues"
+Source = "https://github.com/devleaks/lst-utils"
+
+[project.scripts]
+lst-generator-cli = "src:generator.main"
+lst-converter-cli = "src:converter.main"
+lst-geojson-cli = "src:lst2geojson.main"
+
+# ###########################################
+#
+# Edit
+#
+[tool.ruff]
+line-length = 160
+docstring-code-format = true
+select = [
+    "E",
+    "F",
+    "W",
+]
+ignore = []
+
+[tool.black]
+line-length = 160
+
+[tool.flake8]
+max-line-length = 160
+
+# ###########################################
+#
+# Build
+#
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/version.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
