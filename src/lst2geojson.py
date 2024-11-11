@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import argparse
 
 
 # @todo: add reading of init.lst and read bounding box
@@ -105,9 +106,18 @@ class LSTGeoJSON:
 
 
 def main():
-    fn = "objects.lst"
-    if len(sys.argv) > 1:
-        fn = sys.argv[1]
+    # Command-line arguments
+    #
+    parser = argparse.ArgumentParser(description="Convert LST Objects.lst file to GeoJSON features")
+    parser.add_argument("objects_file", metavar="objects_file", type=str, nargs="?", default="Objects.lst", help="LST Objects.lst file to convert")
+
+    args = parser.parse_args()
+    fn=args.objects_file
+
+    if fn is None:
+        parser.print_help()
+        sys.exit(1)
+
     gt = LSTGeoJSON(fn)
 
     # To view transformation on terminal, uses:

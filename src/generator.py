@@ -24,6 +24,10 @@ COMMAND_SEPARATOR = ";"
 EARTH_RADIUS = 6373000.0 # Approximate radius of earth in meters
 MAX_DISTANCE = 1.0 # in meters, for proximity between two points
 
+#
+BUFFER = 0.2 # buffer around init.lst bounding box
+ROUND = 4 # decimal part of bounding box
+
 # Command-line arguments
 #
 parser = argparse.ArgumentParser(description="Generate LST files from prepared scenery")
@@ -110,8 +114,6 @@ def main():
     #
     # Init.lst
     #
-    BUFFER = 0.2
-    ROUND = 4
     north = max([-90] + [float(n.get("lat")) for n in all_nodes.values()]) + BUFFER
     south = min([90] + [float(n.get("lat")) for n in all_nodes.values()]) - BUFFER
     east = max([-180] + [float(n.get("lon")) for n in all_nodes.values()]) + BUFFER  # not correct over antimeridian
@@ -150,7 +152,7 @@ def main():
             if (desc := way["tags"].get("description")) is not None:
                 if not (desc.startswith("HIGHWAY") or desc.startswith("LOOP") or desc.startswith("TRAIN")):
                     dual_print("# warning route has invalid description, adding empty HIGHWAY command", file=fp)
-                    dual_print("HIGHWAY,NULL,-1,-1")
+                    dual_print("HIGHWAY,NULL,-1,-1", file=fp)
                 else:
                     dual_print(f"{'\n'.join(desc.split(COMMAND_SEPARATOR))}", file=fp)
             else:
@@ -206,7 +208,7 @@ def main():
                     elif desc.startswith("BRANCH"):
                         if branch_at is None:
                             dual_print(f"# error: branch statement ({desc}) has no branch", file=fp)
-                        chance = None
+                        chance = DEFAULT_CHANCE
                         if "_" in desc:
                             pos = desc.index("_")
                             chance = desc[pos+1:]
@@ -215,10 +217,9 @@ def main():
                             chance = desc[pos+1:]
                         else:
                             dual_print(f"# warning: no _ or , in statement {desc}, no chance", file=fp)
-                        print(f"# info: chance={chance}")
                         try:
                             chance = float(chance)
-                        except:
+                        except TypeError:
                             chance = DEFAULT_CHANCE
                             dual_print(f"# warning: chance {chance} not a number, forcing to {chance}", file=fp)
                         if chance > 2:
@@ -233,7 +234,7 @@ def main():
                     speed = 10
                     try:
                         speed = float(speed_str)
-                    except:
+                    except TypeError:
                         speed = DEFAULT_SPEED
                         dual_print(f"# warning: speed {speed_str} not a number, forcing to {speed}", file=fp)
                 if speed is not None:

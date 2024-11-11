@@ -14,9 +14,10 @@ import logging
 import sys
 import os
 import json
+import argparse
 from math import copysign, sin, cos, atan2, sqrt, radians
 from datetime import datetime
-from .biglib import BigLib, XPLANE_ROOT_PATH
+from biglib import BigLib, XPLANE_ROOT_PATH
 
 __START_YEAR__ = 2023  # of this project
 __THIS_YEAR__ = datetime.now().year
@@ -37,6 +38,11 @@ DEFAULT_OBJECT = "gt2lst/follow_me.obj"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("gt2lst")
 
+
+# Command-line arguments
+#
+parser = argparse.ArgumentParser(description="Convert Ground Traffic file to LST")
+parser.add_argument("ground_traffic_file", metavar="ground_traffic_file", type=str, nargs="?", default="GroundTraffic.txt", help="Ground Traffic file to convert")
 
 # GT uses "distance" between objects, LST uses "time" between objects.
 def get_time(speed, distance):
@@ -769,9 +775,13 @@ class GroundTraffic(Converter):
             self.line(f"DREF,{dref},{value}")
 
 def main():
-    fn = "GroundTraffic.txt"
-    if len(sys.argv) > 1:
-        fn = sys.argv[1]
+    args = parser.parse_args()
+    fn=args.ground_traffic_file
+
+    if fn is None:
+        parser.print_help()
+        sys.exit(1)
+
     gt = GroundTraffic(fn, bbox_buffer=0.001)
 
     # To view transformation on terminal, uses:
