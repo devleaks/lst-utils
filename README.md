@@ -63,7 +63,7 @@ options:
 Application to convert LST files to GeoJSON paths visible on geojson.io.
 
 ```
-usage: lst2geojson.py [-h] [objects_file]
+usage: lst-geojson-py [-h] [objects_file]
 
 Convert LST Objects.lst file to GeoJSON features
 
