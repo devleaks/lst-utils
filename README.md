@@ -1,8 +1,13 @@
-# Liviing Scenery Technology Utilities
+# Living Scenery Technology Utilities
 
 Living Scenery Technology (LST) is a X-Plane plugin
 to add life to your environment by moving objects
 on paths.
+
+LST comes with development utilities (converter, generator) but these tools are only available on windows platform.
+
+This development is an attempt to provide the same tools in all environments
+by using the scripting python language instead.
 
 # Installation and Usage
 
