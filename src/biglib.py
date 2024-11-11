@@ -1,4 +1,3 @@
-import sys
 import os
 import glob
 import re
@@ -6,9 +5,6 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("BigLib")
-
-XPLANE_ROOT_PATH = "/Users/pierre/X-Plane 12"
-
 
 class BigLib:
     """Fast and naive class to collect "all" library objects in X-Plane directory.

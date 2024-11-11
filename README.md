@@ -1,6 +1,7 @@
 # Living Scenery Technology Utilities
 
-Living Scenery Technology (LST) is a X-Plane plugin
+Living Scenery Technology (LST) is a X-Plane
+[plugin](https://forums.x-plane.org/index.php?/files/file/82876-living-scenery-technology/)
 to add life to your environment by moving objects
 on paths.
 
@@ -73,3 +74,9 @@ positional arguments:
 options:
   -h, --help    show this help message and exit
 ```
+
+# Reset LST
+
+There also is a little [XPPython3 plugin](https://xppython3.readthedocs.io/en/latest/)
+to reset LST when new files are loaded.
+It can be found in the src folder, `PI_restart_lst.py` file.

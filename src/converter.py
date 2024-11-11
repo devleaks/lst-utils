@@ -15,33 +15,22 @@ import sys
 import os
 import json
 import argparse
-from math import copysign, sin, cos, atan2, sqrt, radians
+from math import sin, cos, atan2, sqrt, radians
 from datetime import datetime
-from biglib import BigLib, XPLANE_ROOT_PATH
-
-__START_YEAR__ = 2023  # of this project
-__THIS_YEAR__ = datetime.now().year
-__NAME__ = "gt2lst"
-__DESCRIPTION__ = "GroundTraffic to Living Scenery Technology Converter"
-__LICENSE__ = "MIT"
-__LICENSEURL__ = "https://mit-license.org"
-__COPYRIGHT__ = f"© {__START_YEAR__}{'-' + str(__THIS_YEAR__) if __THIS_YEAR__ > __START_YEAR__ else ''} Pierre M <pierre@devleaks.be>"
-__version__ = "0.3.2"
-__version_info__ = tuple(map(int, __version__.split(".")))
-__version_name__ = "development"
-__authorurl__ = "https://github.com/devleaks/gt2lst"
+from biglib import BigLib
 
 
-DEFAULT_OBJECT = "gt2lst/follow_me.obj"
+DEFAULT_OBJECT = "library/follow_me.obj"
 
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("gt2lst")
+logger = logging.getLogger(__file__)
 
 
 # Command-line arguments
 #
 parser = argparse.ArgumentParser(description="Convert Ground Traffic file to LST")
+parser.add_argument("--xplane", metavar="xplane_root_path", type=str, help="X-Plane Home Directory, to locate library objects")
 parser.add_argument("ground_traffic_file", metavar="ground_traffic_file", type=str, nargs="?", default="GroundTraffic.txt", help="Ground Traffic file to convert")
 
 # GT uses "distance" between objects, LST uses "time" between objects.
@@ -56,8 +45,6 @@ def get_distance(speed, time):
 
 
 R = 6373.0
-
-
 def distance(lat1_d, lon1_d, lat2_d, lon2_d):
     lat1 = radians(lat1_d)
     lon1 = radians(lon1_d)
@@ -328,10 +315,10 @@ class GroundTraffic(Converter):
     # Parses groundtraffic.txt file and builds a list of "lines"
     # Each line is an a groundtraffic "object" to convert.
     #
-    def __init__(self, fn: str, **kwargs):
+    def __init__(self, fn: str, xplane_root_path: str, **kwargs):
         Converter.__init__(self, **kwargs)
 
-        self.objects = BigLib(XPLANE_ROOT_PATH)
+        self.objects = BigLib(xplane_root_path)
         self.check_objects = kwargs.get("check_objects", False)
         self.replace_missing = kwargs.get("replace", False)
         self.replacee = kwargs.get("replacee", DEFAULT_OBJECT)
@@ -363,7 +350,6 @@ class GroundTraffic(Converter):
         if self.replace_missing and self.replacee is not None:
             self.check_objects(self.replacee)
         self.load()
-        logger.debug(f"{__NAME__} rel. {__version__} {__COPYRIGHT__}")
 
     def check_object(self, name):
         return self.objects.check(name)
@@ -698,9 +684,6 @@ class GroundTraffic(Converter):
 
     def mkinit(self):
         self.reset()
-        self.comment(
-            f"converted with {__NAME__} rel. {__version__} from {self.filename} on {datetime.now().isoformat()}"
-        )
         # Debug flag
         # self.line("1" if self.debug else "0")
         self.line("1")  # force debug during development
@@ -717,9 +700,6 @@ class GroundTraffic(Converter):
     def mkobjects(self, output_comments: bool = True):
         # Print header info
         self.reset()
-        self.comment(
-            f"converted with {__NAME__} rel. {__version__} from {self.filename} on {datetime.now().isoformat()}"
-        )
         for l in self.commands:
             r = None
             logger.debug(f"doing {type(l).__name__}: {l}")
@@ -782,7 +762,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    gt = GroundTraffic(fn, bbox_buffer=0.001)
+    gt = GroundTraffic(fn=fn, xplane_root_path=args.xplane, bbox_buffer=0.001)
 
     # To view transformation on terminal, uses:
     # gt.print()
