@@ -31,7 +31,7 @@ ROUND = 4 # decimal part of bounding box
 # Command-line arguments
 #
 parser = argparse.ArgumentParser(description="Generate LST files from prepared scenery")
-parser.add_argument("--antimeridian", action="store_true", help="force bounding box around abtimeridian")
+parser.add_argument("--antimeridian", action="store_true", help="force bounding box around antimeridian")
 parser.add_argument("scenery_folder", metavar="scenery_folder", type=str, nargs="?", help="scenery folder")
 
 #

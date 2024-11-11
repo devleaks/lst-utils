@@ -56,7 +56,7 @@ positional arguments:
 
 options:
   -h, --help      show this help message and exit
-  --antimeridian  force bounding box around abtimeridian
+  --antimeridian  force bounding box around antimeridian
 ```
 
 # LST GeoJSON
